@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const breadcrumbs = [{ label: 'Tools' }];
+---
+
+<BaseLayout
+  title="Interactive Developer Tools — Ecommerce & CRO Knowledge Base"
+  description="Explore interactive developer tools: CRO Audit Checklist and Ecommerce Terminology Quiz."
+>
+  <div class="container page-padding">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="hub-header">
+      <span class="badge badge-cro">Interactive Tools</span>
+      <h1>Developer Tools & Calculators</h1>
+      <p class="hub-subtitle">
+        Interactive client-side tools designed for ecommerce developers, CRO engineers, and store auditors.
+      </p>
+    </header>
+
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="card-icon">📋</div>
+        <h2><a href="/tools/cro-audit-checklist/">CRO Audit Checklist</a></h2>
+        <p>Audit your store across 16 core optimization standards (Mobile, PDP, Cart, Web Vitals) and compute a live score.</p>
+        <a href="/tools/cro-audit-checklist/" class="tool-link">Launch Checklist &rarr;</a>
+      </div>
+
+      <div class="tool-card">
+        <div class="card-icon">🧠</div>
+        <h2><a href="/tools/terminology-quiz/">Ecommerce Terminology Quiz</a></h2>
+        <p>Test your domain knowledge on SKUs, variants, profit margins, and checkout database architectures.</p>
+        <a href="/tools/terminology-quiz/" class="tool-link">Take Quiz &rarr;</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-padding {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .hub-header h1 {
+    font-size: var(--fs-3xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .hub-subtitle {
+    font-size: var(--fs-lg);
+    color: var(--color-text-subtle);
+    max-width: 640px;
+    margin-bottom: var(--space-12);
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .tool-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .tool-card h2 {
+    font-size: var(--fs-xl);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .tool-card h2 a {
+    color: var(--color-text-main);
+    text-decoration: none;
+  }
+
+  .tool-card h2 a:hover {
+    color: var(--color-primary);
+  }
+
+  .tool-card p {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    flex: 1;
+  }
+
+  .tool-link {
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--color-primary);
+    margin-top: var(--space-4);
+  }
+</style>

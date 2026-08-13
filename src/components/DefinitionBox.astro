@@ -1,0 +1,80 @@
+---
+interface Props {
+  term?: string;
+  category?: 'ecommerce' | 'cro' | 'shopify' | 'metrics';
+}
+
+const { term, category = 'ecommerce' } = Astro.props;
+---
+
+<div class={`definition-box category-${category}`}>
+  <div class="definition-header">
+    <span class="definition-badge">Definition</span>
+    {term && <span class="definition-term">{term}</span>}
+  </div>
+  <div class="definition-body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .definition-box {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-primary);
+    border-radius: var(--radius-md);
+    padding: var(--space-6) var(--space-8);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-10);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .definition-box.category-shopify {
+    border-left-color: var(--color-shopify);
+  }
+
+  .definition-box.category-cro {
+    border-left-color: var(--color-cro);
+  }
+
+  .definition-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .definition-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .category-shopify .definition-badge {
+    color: var(--color-shopify);
+    background-color: var(--color-shopify-light);
+  }
+
+  .category-cro .definition-badge {
+    color: var(--color-cro);
+    background-color: var(--color-cro-light);
+  }
+
+  .definition-term {
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--color-text-main);
+  }
+
+  .definition-body :global(p) {
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--color-text-main);
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LearningPathBanner from '../../components/LearningPathBanner.astro';
+import NextStepCard from '../../components/NextStepCard.astro';
+import RelatedConcepts from '../../components/RelatedConcepts.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getResolvedRelationships } from '../../utils/relationships';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('knowledge', (entry) => entry.data.type === 'comparison' && !entry.data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'knowledge'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const relationships = await getResolvedRelationships(entry);
+
+const breadcrumbs = [
+  { label: 'Comparisons', href: '/compare/' },
+  { label: entry.data.title }
+];
+---
+
+<BaseLayout
+  title={`${entry.data.title} — Comparison Guide`}
+  description={entry.data.summary}
+>
+  <article class="article-container article-page">
+    <header class="article-header">
+      <Breadcrumbs items={breadcrumbs} />
+      <div class="meta-row">
+        <span class="badge badge-warning">Comparison Matrix</span>
+        <span class="difficulty-tag">Level: {entry.data.difficulty}</span>
+      </div>
+      <h1 class="article-title">{entry.data.title}</h1>
+      <p class="summary-lead">{entry.data.summary}</p>
+    </header>
+
+    {entry.data.learningPath && (
+      <LearningPathBanner pathData={entry.data.learningPath} />
+    )}
+
+    <div class="article-body">
+      <Content />
+    </div>
+
+    {entry.data.learningPath && (
+      <NextStepCard
+        pathId={entry.data.learningPath.id}
+        currentOrder={entry.data.learningPath.order}
+        nextSlug={entry.data.learningPath.nextSlug}
+      />
+    )}
+
+    <RelatedConcepts
+      relatedEntries={relationships.relatedEntries}
+      confusedWithEntries={relationships.confusedWithEntries}
+      shopifyEntry={relationships.shopifyEntry}
+    />
+  </article>
+</BaseLayout>
+
+<style>
+  .article-page {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .article-header {
+    margin-bottom: var(--space-8);
+  }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .difficulty-tag {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  .article-title {
+    font-size: var(--fs-3xl);
+    margin-bottom: var(--space-3);
+  }
+
+  .summary-lead {
+    font-size: var(--fs-lg);
+    color: var(--color-text-muted);
+    line-height: var(--lh-relaxed);
+    margin-bottom: var(--space-8);
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { getEntryUrl } from '../../utils/relationships';
+
+export async function getStaticPaths() {
+  const allEntries = await getCollection('knowledge', (e) => !e.data.draft);
+  const pathIds = new Set<string>();
+
+  for (const entry of allEntries) {
+    if (entry.data.learningPath?.id) {
+      pathIds.add(entry.data.learningPath.id);
+    }
+  }
+
+  // Fallback path ID if no markdown files are loaded yet
+  if (pathIds.size === 0) pathIds.add('ecommerce-fundamentals');
+
+  return Array.from(pathIds).map((id) => ({
+    params: { id }
+  }));
+}
+
+const { id } = Astro.params;
+const allEntries = await getCollection('knowledge', (e) => e.data.learningPath?.id === id && !e.data.draft);
+
+allEntries.sort((a, b) => (a.data.learningPath?.order || 0) - (b.data.learningPath?.order || 0));
+
+const pathTitle = allEntries[0]?.data.learningPath?.title || 'Learning Path Track';
+const breadcrumbs = [
+  { label: 'Learning Paths', href: '/paths/' },
+  { label: pathTitle }
+];
+---
+
+<BaseLayout
+  title={`${pathTitle} — Step-by-Step Track`}
+  description={`Follow the step-by-step reading guide for ${pathTitle}.`}
+>
+  <div class="container page-padding">
+    <Breadcrumbs items={breadcrumbs} />
+    <header class="hub-header">
+      <span class="badge badge-ecommerce">Guided Track</span>
+      <h1>{pathTitle}</h1>
+      <p class="hub-subtitle">Follow this step-by-step sequence to master the domain concepts in order.</p>
+    </header>
+
+    <div class="steps-timeline">
+      {allEntries.map((entry, index) => (
+        <div class="timeline-item">
+          <div class="timeline-marker">{index + 1}</div>
+          <div class="timeline-content">
+            <div class="item-meta">
+              <span class="badge badge-ecommerce">{entry.data.type}</span>
+              <span class="difficulty">{entry.data.difficulty}</span>
+            </div>
+            <h2><a href={getEntryUrl(entry)}>{entry.data.title}</a></h2>
+            <p>{entry.data.summary}</p>
+            <a href={getEntryUrl(entry)} class="read-btn">Read Step {index + 1} &rarr;</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-padding {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .hub-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .hub-header h1 {
+    font-size: var(--fs-3xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .hub-subtitle {
+    font-size: var(--fs-lg);
+    color: var(--color-text-subtle);
+    max-width: 720px;
+  }
+
+  .steps-timeline {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: var(--space-6);
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+
+  .timeline-marker {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--fs-md);
+    flex-shrink: 0;
+  }
+
+  .timeline-content {
+    flex: 1;
+  }
+
+  .item-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+
+  .difficulty {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+    text-transform: capitalize;
+  }
+
+  .timeline-content h2 {
+    font-size: var(--fs-xl);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .timeline-content a {
+    color: var(--color-text-main);
+    text-decoration: none;
+  }
+
+  .timeline-content a:hover {
+    color: var(--color-primary);
+  }
+
+  .timeline-content p {
+    font-size: var(--fs-base);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .read-btn {
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--color-primary) !important;
+  }
+</style>

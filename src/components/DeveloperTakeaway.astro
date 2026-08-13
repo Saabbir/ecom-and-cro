@@ -1,0 +1,52 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title = "Developer Takeaway" } = Astro.props;
+---
+
+<div class="developer-takeaway" aria-label={title}>
+  <div class="takeaway-header">
+    <span class="takeaway-icon">💡</span>
+    <h3 class="takeaway-title">{title}</h3>
+  </div>
+  <div class="takeaway-content">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .developer-takeaway {
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-6) var(--space-8);
+    margin-top: 2.75rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .takeaway-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .takeaway-title {
+    margin: 0;
+    font-size: var(--fs-md);
+    color: var(--color-text-main);
+    font-weight: 700;
+  }
+
+  .takeaway-content {
+    font-size: var(--fs-base);
+    color: var(--color-text-muted);
+    line-height: var(--lh-relaxed);
+  }
+
+  .takeaway-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,160 @@
+{
+  "$ref": "#/definitions/knowledge",
+  "definitions": {
+    "knowledge": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "ecommerce",
+            "cro",
+            "shopify",
+            "metrics"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "concept",
+            "comparison",
+            "shopify",
+            "metric",
+            "cro"
+          ]
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "beginner",
+            "intermediate",
+            "advanced"
+          ],
+          "default": "beginner"
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "relatedSlugs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "confusedWithSlugs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "shopifySlug": {
+          "type": "string"
+        },
+        "comparisonSlugs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "hierarchy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "isCurrent": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          "default": []
+        },
+        "learningPath": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "order": {
+              "type": "number"
+            },
+            "nextSlug": {
+              "type": "string"
+            },
+            "prevSlug": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "order"
+          ],
+          "additionalProperties": false
+        },
+        "seo": {
+          "type": "object",
+          "properties": {
+            "metaTitle": {
+              "type": "string"
+            },
+            "metaDescription": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "draft": {
+          "type": "boolean",
+          "default": false
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "summary",
+        "category",
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,302 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { label: 'Tools Hub', href: '/tools/' },
+  { label: 'CRO Audit Checklist' }
+];
+
+const auditCategories = [
+  {
+    id: 'performance',
+    title: '⚡ Performance & Web Vitals',
+    items: [
+      { id: 'lcp', label: 'LCP (Largest Contentful Paint) under 2.5 seconds on 4G' },
+      { id: 'cls', label: 'CLS (Cumulative Layout Shift) under 0.1' },
+      { id: 'hero-preload', label: 'Hero images preloaded with fetchpriority="high"' },
+      { id: 'fout', label: 'No layout flickering (FOUT) from A/B test scripts' }
+    ]
+  },
+  {
+    id: 'pdp',
+    title: '🛍️ Product Detail Page (PDP)',
+    items: [
+      { id: 'price-clarity', label: 'Clear price display with total cost savings highlighted' },
+      { id: 'variant-sync', label: 'Variant selector updates URL & image carousel synchronously' },
+      { id: 'sticky-cta', label: 'Sticky "Add to Cart" bar visible on mobile scroll' },
+      { id: 'social-proof', label: 'Star ratings & verified customer reviews above the fold' }
+    ]
+  },
+  {
+    id: 'cart',
+    title: '🛒 Cart & Drawer Architecture',
+    items: [
+      { id: 'shipping-bar', label: 'Dynamic progress bar indicating free shipping threshold' },
+      { id: 'quantity-controls', label: 'Instant AJAX quantity increment / decrement without page reload' },
+      { id: 'trust-badges', label: 'Accepted payment icons (Shop Pay, Apple Pay, Visa) visible in cart' },
+      { id: 'cross-sell', label: '1-click complementary product add-ons in drawer' }
+    ]
+  },
+  {
+    id: 'trust-mobile',
+    title: '📱 Mobile Usability & Trust',
+    items: [
+      { id: 'tap-targets', label: 'Touch targets minimum 48x48px for thumb navigation' },
+      { id: 'form-autofill', label: 'Checkout inputs support native browser autofill' },
+      { id: 'guest-checkout', label: 'Guest checkout enabled without forced account creation' },
+      { id: 'return-policy', label: 'Clear return policy & warranty link near CTA' }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title="Interactive CRO Audit Checklist — Ecommerce Engineering"
+  description="Evaluate your store against 16 core conversion standards with live score tracking."
+>
+  <div class="container page-padding">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="tool-header">
+      <span class="badge badge-cro">Interactive Tool</span>
+      <h1>Ecommerce CRO Audit Checklist</h1>
+      <p class="tool-subtitle">
+        Audit your storefront against 16 essential performance, PDP, cart, and mobile CRO standards. Progress is saved automatically in your browser.
+      </p>
+    </header>
+
+    <div class="score-card">
+      <div class="score-main">
+        <span class="score-label">Live Audit Score:</span>
+        <span id="score-percentage" class="score-value">0%</span>
+        <span id="score-count" class="score-detail">(0 of 16 items)</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div class="checklist-grid">
+      {auditCategories.map((cat) => (
+        <section class="audit-section">
+          <h2>{cat.title}</h2>
+          <div class="items-list">
+            {cat.items.map((item) => (
+              <label class="checkbox-label">
+                <input type="checkbox" class="audit-checkbox" data-id={item.id} />
+                <span class="item-text">{item.label}</span>
+              </label>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-padding {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .tool-header h1 {
+    font-size: var(--fs-3xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .tool-subtitle {
+    font-size: var(--fs-lg);
+    color: var(--color-text-subtle);
+    max-width: 640px;
+    margin-bottom: var(--space-8);
+  }
+
+  .score-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-12);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .score-main {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+
+  .score-label {
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .score-value {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    color: var(--color-cro);
+    font-family: var(--font-mono);
+  }
+
+  .score-detail {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+  }
+
+  .progress-bar-bg {
+    height: 0.75rem;
+    background-color: var(--color-bg-subtle);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background-color: var(--color-cro);
+    transition: width 0.3s ease;
+  }
+
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-8);
+  }
+
+  .audit-section {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+
+  .audit-section h2 {
+    font-size: var(--fs-lg);
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-3);
+  }
+
+  .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    cursor: pointer;
+    font-size: var(--fs-sm);
+    color: var(--color-text-main);
+    line-height: var(--lh-normal);
+    user-select: none;
+  }
+
+  .audit-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+    flex-shrink: 0; /* Guarantee exact, consistent size without shrinking */
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg-surface);
+    cursor: pointer;
+    margin-top: 0.15rem;
+    display: grid;
+    place-content: center;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .checkbox-label:hover .audit-checkbox {
+    border-color: var(--color-cro);
+  }
+
+  .audit-checkbox::before {
+    content: "";
+    width: 0.65rem;
+    height: 0.65rem;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: center;
+    transition: transform 0.15s ease-in-out;
+    background-color: #ffffff;
+  }
+
+  .audit-checkbox:checked {
+    background-color: var(--color-cro);
+    border-color: var(--color-cro);
+  }
+
+  .audit-checkbox:checked::before {
+    transform: scale(1);
+  }
+
+  .audit-checkbox:focus-visible {
+    outline: 2px solid var(--color-cro);
+    outline-offset: 2px;
+  }
+
+  .item-text {
+    flex: 1;
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  const checkboxes = document.querySelectorAll<HTMLInputElement>('.audit-checkbox');
+  const scorePercentage = document.getElementById('score-percentage');
+  const scoreCount = document.getElementById('score-count');
+  const progressBarFill = document.getElementById('progress-bar-fill');
+
+  function updateScore() {
+    const total = checkboxes.length;
+    let checkedCount = 0;
+
+    checkboxes.forEach((cb) => {
+      if (cb.checked) checkedCount++;
+    });
+
+    const percent = Math.round((checkedCount / total) * 100);
+
+    if (scorePercentage) scorePercentage.textContent = `${percent}%`;
+    if (scoreCount) scoreCount.textContent = `(${checkedCount} of ${total} items)`;
+    if (progressBarFill) progressBarFill.style.width = `${percent}%`;
+
+    // Save state in localStorage
+    const savedState: Record<string, boolean> = {};
+    checkboxes.forEach((cb) => {
+      const id = cb.getAttribute('data-id');
+      if (id) savedState[id] = cb.checked;
+    });
+    localStorage.setItem('cro_audit_checklist', JSON.stringify(savedState));
+  }
+
+  // Load saved state
+  const saved = localStorage.getItem('cro_audit_checklist');
+  if (saved) {
+    try {
+      const state = JSON.parse(saved);
+      checkboxes.forEach((cb) => {
+        const id = cb.getAttribute('data-id');
+        if (id && state[id] !== undefined) {
+          cb.checked = state[id];
+        }
+      });
+    } catch (e) {
+      console.error('Failed to parse saved checklist state', e);
+    }
+  }
+
+  updateScore();
+
+  checkboxes.forEach((cb) => cb.addEventListener('change', updateScore));
+</script>

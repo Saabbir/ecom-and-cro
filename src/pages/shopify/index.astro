@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { getEntryUrl } from '../../utils/relationships';
+
+const entries = await getCollection('knowledge', (e) => e.data.category === 'shopify' && !e.data.draft);
+
+const breadcrumbs = [{ label: 'Shopify Concepts' }];
+---
+
+<BaseLayout
+  title="Shopify Concepts & Data Architecture — Knowledge Base"
+  description="How Shopify represents universal ecommerce concepts in Admin, Liquid, Storefront API, and GraphQL."
+>
+  <div class="container page-padding">
+    <Breadcrumbs items={breadcrumbs} />
+    <header class="hub-header">
+      <span class="badge badge-shopify">Category Hub</span>
+      <h1>Shopify Concepts & Architecture</h1>
+      <p class="hub-subtitle">
+        Understand how Shopify models ecommerce domain entities across Liquid, Admin API, Storefront API, and GraphQL.
+      </p>
+    </header>
+
+    <div class="entries-grid">
+      {entries.map((entry) => (
+        <a href={getEntryUrl(entry)} class="entry-card">
+          <div class="card-meta">
+            <span class="badge badge-shopify">Shopify Model</span>
+            <span class="difficulty">{entry.data.difficulty}</span>
+          </div>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.summary}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-padding {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .hub-header {
+    margin-bottom: var(--space-12);
+  }
+
+  .hub-header h1 {
+    font-size: var(--fs-3xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .hub-subtitle {
+    font-size: var(--fs-lg);
+    color: var(--color-text-subtle);
+    max-width: 720px;
+    line-height: var(--lh-relaxed);
+  }
+
+  .entries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .entry-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    text-decoration: none;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .entry-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-border-strong);
+    text-decoration: none;
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+  }
+
+  .difficulty {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+    text-transform: capitalize;
+  }
+
+  .entry-card h2 {
+    font-size: var(--fs-lg);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-main);
+  }
+
+  .entry-card p {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    margin-bottom: 0;
+  }
+</style>

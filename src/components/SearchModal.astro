@@ -1,0 +1,276 @@
+---
+---
+
+<dialog id="search-dialog" class="search-dialog" aria-label="Search Knowledge Base">
+  <div class="search-modal-container">
+    <div class="search-header">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="search" id="search-input" class="search-input" placeholder="Type to search concepts, SKUs, CRO hypotheses..." autocomplete="off" />
+      <button type="button" id="close-search-btn" class="close-search-btn" aria-label="Close search">Esc</button>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="filter-pills-bar">
+      <button type="button" class="filter-pill active" data-filter="all">All</button>
+      <button type="button" class="filter-pill" data-filter="ecommerce">Ecommerce</button>
+      <button type="button" class="filter-pill" data-filter="comparison">Comparisons</button>
+      <button type="button" class="filter-pill" data-filter="shopify">Shopify</button>
+      <button type="button" class="filter-pill" data-filter="metrics">Metrics</button>
+      <button type="button" class="filter-pill" data-filter="cro">CRO</button>
+    </div>
+
+    <div class="search-body">
+      <div id="search-results" class="search-results">
+        <p class="search-hint">Type a keyword like <code>Variant</code>, <code>SKU</code>, <code>Conversion Rate</code>, or <code>Hypothesis</code></p>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .search-dialog {
+    border: none;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    padding: 0;
+    width: 90%;
+    max-width: 640px;
+    margin: 8vh auto auto auto;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .search-dialog::backdrop {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-modal-container {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .search-header {
+    display: flex;
+    align-items: center;
+    padding: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    gap: var(--space-3);
+  }
+
+  .search-icon {
+    color: var(--color-text-subtle);
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    font-size: var(--fs-md);
+    color: var(--color-text-main);
+    outline: none;
+    font-family: var(--font-sans);
+  }
+
+  .close-search-btn {
+    background: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
+    font-size: var(--fs-xs);
+    font-family: var(--font-mono);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .filter-pills-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background-color: var(--color-bg-subtle);
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+  }
+
+  .filter-pill {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--color-text-subtle);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+
+  .filter-pill:hover {
+    color: var(--color-text-main);
+  }
+
+  .filter-pill.active {
+    background-color: var(--color-bg-surface);
+    color: var(--color-primary);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .search-body {
+    max-height: 420px;
+    overflow-y: auto;
+    padding: var(--space-4);
+  }
+
+  .search-hint {
+    color: var(--color-text-subtle);
+    font-size: var(--fs-sm);
+    text-align: center;
+    padding: var(--space-6) 0;
+  }
+
+  :global(.search-result-item) {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--color-text-main);
+    transition: background-color var(--transition-fast);
+    margin-bottom: var(--space-2);
+  }
+
+  :global(.search-result-item:hover), :global(.search-result-item:focus) {
+    background-color: var(--color-bg-subtle);
+    outline: none;
+  }
+
+  :global(.result-header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.2rem;
+  }
+
+  :global(.result-title) {
+    font-weight: 600;
+    font-size: var(--fs-base);
+  }
+
+  :global(.result-summary) {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    line-height: var(--lh-normal);
+  }
+</style>
+
+<script>
+  interface SearchItem {
+    title: string;
+    slug: string;
+    url: string;
+    summary: string;
+    category: string;
+    type: string;
+    tags: string[];
+  }
+
+  const dialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+  const resultsContainer = document.getElementById('search-results');
+  const openBtn = document.getElementById('open-search-btn');
+  const closeBtn = document.getElementById('close-search-btn');
+  const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+
+  let searchIndex: SearchItem[] | null = null;
+  let activeFilter = 'all';
+
+  async function loadSearchIndex() {
+    if (searchIndex) return;
+    try {
+      const res = await fetch('/api/search-index.json');
+      searchIndex = await res.json();
+    } catch (e) {
+      console.error('Failed to load search index', e);
+    }
+  }
+
+  function openSearch() {
+    dialog?.showModal();
+    loadSearchIndex();
+    setTimeout(() => searchInput?.focus(), 50);
+  }
+
+  function closeSearch() {
+    dialog?.close();
+  }
+
+  openBtn?.addEventListener('click', openSearch);
+  closeBtn?.addEventListener('click', closeSearch);
+
+  // Filter Pill Click Handlers
+  filterPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      filterPills.forEach((p) => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeFilter = pill.getAttribute('data-filter') || 'all';
+      renderResults();
+    });
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      if (dialog?.open) {
+        closeSearch();
+      } else {
+        openSearch();
+      }
+    }
+  });
+
+  function renderResults() {
+    const query = searchInput?.value.trim().toLowerCase() || '';
+    if (!resultsContainer) return;
+
+    if (!query && activeFilter === 'all') {
+      resultsContainer.innerHTML = '<p class="search-hint">Type a keyword or select a category filter above</p>';
+      return;
+    }
+
+    if (!searchIndex) return;
+
+    const matches = searchIndex.filter((item) => {
+      // Category Filter Check
+      if (activeFilter !== 'all') {
+        if (activeFilter === 'comparison' && item.type !== 'comparison') return false;
+        if (activeFilter !== 'comparison' && item.category !== activeFilter) return false;
+      }
+
+      if (!query) return true; // Filter pill active without query shows all in category
+
+      const titleMatch = item.title.toLowerCase().includes(query);
+      const summaryMatch = item.summary.toLowerCase().includes(query);
+      const tagMatch = item.tags.some((t) => t.toLowerCase().includes(query));
+      return titleMatch || summaryMatch || tagMatch;
+    });
+
+    if (matches.length === 0) {
+      resultsContainer.innerHTML = `<p class="search-hint">No results found matching query</p>`;
+      return;
+    }
+
+    resultsContainer.innerHTML = matches.map((item) => `
+      <a href="${item.url}" class="search-result-item">
+        <div class="result-header">
+          <span class="result-title">${item.title}</span>
+          <span class="badge badge-${item.category === 'shopify' ? 'shopify' : item.category === 'cro' ? 'cro' : 'ecommerce'}">${item.type}</span>
+        </div>
+        <div class="result-summary">${item.summary}</div>
+      </a>
+    `).join('');
+  }
+
+  searchInput?.addEventListener('input', renderResults);
+</script>

@@ -1,0 +1,297 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { getEntryUrl } from '../../utils/relationships';
+
+const breadcrumbs = [{ label: 'Learning Paths' }];
+
+const paths = [
+  {
+    id: 'ecommerce-fundamentals',
+    number: '01',
+    title: 'Product & Catalog Architecture',
+    description: 'Learn how products, variants, SKUs, barcodes, catalogs, and inventory fit together sequentially.',
+    badge: 'Track 1',
+    badgeClass: 'badge-ecommerce'
+  },
+  {
+    id: 'participants-pricing',
+    number: '02',
+    title: 'Commerce Participants, Pricing & Discounts',
+    description: 'Master the relationships between merchants, vendors, customers, prices, discounts, and coupons.',
+    badge: 'Track 2',
+    badgeClass: 'badge-ecommerce'
+  },
+  {
+    id: 'orders-fulfillment',
+    number: '03',
+    title: 'Orders, Payments & Fulfillment',
+    description: 'Understand checkout orders, payment gateway authorizations, multi-location inventory, and shipping.',
+    badge: 'Track 3',
+    badgeClass: 'badge-shopify'
+  },
+  {
+    id: 'cro-fundamentals',
+    number: '04',
+    title: 'Metrics, CRO & Experimentation',
+    description: 'Learn conversion rate formulas, hypotheses, A/B testing logic, and optimization frameworks.',
+    badge: 'Track 4',
+    badgeClass: 'badge-cro'
+  }
+];
+
+const allEntries = await getCollection('knowledge', (e) => !e.data.draft);
+
+function getSteps(pathId: string) {
+  return allEntries
+    .filter((e) => e.data.learningPath?.id === pathId)
+    .sort((a, b) => (a.data.learningPath?.order || 0) - (b.data.learningPath?.order || 0));
+}
+---
+
+<BaseLayout
+  title="Sequential Learning Paths — Ecommerce & CRO Knowledge Base"
+  description="Master ecommerce domain architecture and CRO in chronological, step-by-step order."
+>
+  <div class="container page-padding">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="hub-header">
+      <span class="badge badge-cro">Sequential Learning Paths</span>
+      <h1>Master Developer Roadmaps</h1>
+      <p class="hub-subtitle">
+        Follow step-by-step chronological tracks built to guide your understanding from first principles to advanced implementation.
+      </p>
+    </header>
+
+    <div class="paths-stack">
+      {paths.map((p) => {
+        const steps = getSteps(p.id);
+        const firstUrl = steps.length > 0 ? getEntryUrl(steps[0]) : '#';
+
+        return (
+          <div class="path-card">
+            <div class="path-card-header">
+              <div class="path-meta">
+                <span class="path-num font-mono">{p.number}</span>
+                <span class={`badge ${p.badgeClass}`}>{p.badge}</span>
+                <span class="step-count">{steps.length} Steps in Sequence</span>
+              </div>
+
+              <h2 class="path-title">{p.title}</h2>
+              <p class="path-desc">{p.description}</p>
+              
+              <a href={firstUrl} class="start-btn">Start Track (Step 1) &rarr;</a>
+            </div>
+
+            <div class="steps-timeline">
+              <span class="timeline-heading">Step-by-Step Sequence:</span>
+              <ol class="steps-list">
+                {steps.map((entry, idx) => (
+                  <li class="step-item">
+                    <a href={getEntryUrl(entry)} class="step-link">
+                      <span class="step-num font-mono">{idx + 1}</span>
+                      <span class="step-title">{entry.data.title}</span>
+                      <span class="step-type">{entry.data.type}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-padding {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+  }
+
+  .hub-header h1 {
+    font-size: var(--fs-3xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .hub-subtitle {
+    font-size: var(--fs-lg);
+    color: var(--color-text-subtle);
+    max-width: 640px;
+    margin-bottom: var(--space-12);
+  }
+
+  .paths-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .path-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.2fr);
+    gap: var(--space-8);
+    align-items: start;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .path-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .path-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .path-num {
+    font-size: var(--fs-2xl);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .step-count {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .path-title {
+    font-size: var(--fs-xl);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-main);
+  }
+
+  .path-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-6);
+    line-height: var(--lh-relaxed);
+  }
+
+  .start-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+    padding: 0.6rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .start-btn:hover {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .steps-timeline {
+    border-left: 1px solid var(--color-border);
+    padding-left: var(--space-6);
+  }
+
+  .timeline-heading {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .step-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--color-text-main);
+    font-size: var(--fs-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .step-link:hover {
+    background-color: var(--color-bg-subtle);
+    border-color: var(--color-border);
+    color: var(--color-primary);
+  }
+
+  .step-num {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-title {
+    flex: 1;
+    font-weight: 500;
+    color: var(--color-text-main);
+  }
+
+  .step-type {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  @media (max-width: 900px) {
+    .path-card {
+      grid-template-columns: 1fr;
+    }
+    .steps-timeline {
+      border-left: none;
+      border-top: 1px solid var(--color-border);
+      padding-left: 0;
+      padding-top: var(--space-4);
+    }
+  }
+</style>

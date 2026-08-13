@@ -1,0 +1,75 @@
+---
+interface Props {
+  title?: string;
+  shopifyUrl?: string;
+}
+
+const { title = "Shopify Implementation", shopifyUrl } = Astro.props;
+---
+
+<aside class="shopify-callout" aria-label={title}>
+  <div class="callout-header">
+    <span class="shopify-icon font-mono">🛍️</span>
+    <h3 class="callout-title">{title}</h3>
+  </div>
+  <div class="callout-content">
+    <slot />
+  </div>
+  {shopifyUrl && (
+    <div class="callout-footer">
+      <a href={shopifyUrl} class="shopify-link">Read full Shopify concept guide &rarr;</a>
+    </div>
+  )}
+</aside>
+
+<style>
+  .shopify-callout {
+    background-color: var(--color-shopify-light);
+    border: 1px solid var(--color-shopify-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6) var(--space-8);
+    margin-top: 2.75rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .callout-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .callout-title {
+    margin: 0;
+    font-size: var(--fs-md);
+    color: var(--color-shopify);
+    font-weight: 700;
+  }
+
+  .callout-content {
+    font-size: var(--fs-base);
+    color: var(--color-text-main);
+    line-height: var(--lh-relaxed);
+  }
+
+  .callout-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .callout-footer {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-shopify-border);
+  }
+
+  .shopify-link {
+    color: var(--color-shopify);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+  }
+
+  .shopify-link:hover {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import { getEntryUrl } from '../utils/relationships';
+
+interface Props {
+  pathId: string;
+  currentOrder: number;
+  nextSlug?: string;
+}
+
+const { pathId, currentOrder, nextSlug } = Astro.props;
+
+const allEntries = await getCollection('knowledge', (e) => !e.data.draft);
+
+// Find the next entry by nextSlug or by order + 1
+let nextEntry = nextSlug ? allEntries.find((e) => e.slug === nextSlug) : null;
+
+if (!nextEntry) {
+  nextEntry = allEntries.find((e) => e.data.learningPath?.id === pathId && e.data.learningPath?.order === currentOrder + 1) || null;
+}
+---
+
+{nextEntry && (
+  <div class="next-step-card">
+    <div class="next-step-content">
+      <span class="next-step-badge">Next Step in Sequence</span>
+      <span class="next-step-num">Step {currentOrder + 1}</span>
+      <h3 class="next-step-title">{nextEntry.data.title}</h3>
+      <p class="next-step-summary">{nextEntry.data.summary}</p>
+    </div>
+
+    <a href={getEntryUrl(nextEntry)} class="next-step-btn">
+      Continue to Step {currentOrder + 1} &rarr;
+    </a>
+  </div>
+)}
+
+<style>
+  .next-step-card {
+    background: linear-gradient(135deg, var(--color-primary-light) 0%, var(--color-bg-surface) 100%);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    box-shadow: var(--shadow-md);
+  }
+
+  .next-step-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    background-color: var(--color-bg-surface);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-primary-border);
+  }
+
+  .next-step-num {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-text-subtle);
+    margin-left: var(--space-2);
+  }
+
+  .next-step-title {
+    font-size: var(--fs-xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
+    color: var(--color-text-main);
+  }
+
+  .next-step-summary {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    margin-bottom: 0;
+  }
+
+  .next-step-btn {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    padding: 0.85rem 1.75rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: var(--fs-md);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+  }
+
+  .next-step-btn:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .next-step-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .next-step-btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>

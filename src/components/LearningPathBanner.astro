@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import { getEntryUrl } from '../utils/relationships';
+
+interface LearningPathData {
+  id: string;
+  title: string;
+  order: number;
+  nextSlug?: string;
+  prevSlug?: string;
+}
+
+interface Props {
+  pathData: LearningPathData;
+}
+
+const { pathData } = Astro.props;
+
+// Fetch next and prev entries if specified
+const allEntries = await getCollection('knowledge', (e) => !e.data.draft);
+
+const nextEntry = pathData.nextSlug ? allEntries.find((e) => e.slug === pathData.nextSlug) : null;
+const prevEntry = pathData.prevSlug ? allEntries.find((e) => e.slug === pathData.prevSlug) : null;
+---
+
+<div class="learning-path-banner">
+  <div class="banner-main">
+    <span class="path-badge">Learning Path</span>
+    <span class="path-title">
+      <a href={`/paths/${pathData.id}/`}>{pathData.title}</a>
+      <span class="path-step">• Step {pathData.order}</span>
+    </span>
+  </div>
+
+  <div class="banner-nav">
+    {prevEntry && (
+      <a href={getEntryUrl(prevEntry)} class="nav-btn prev-btn">
+        &larr; Prev: {prevEntry.data.title}
+      </a>
+    )}
+    {nextEntry && (
+      <a href={getEntryUrl(nextEntry)} class="nav-btn next-btn">
+        Next: {nextEntry.data.title} &rarr;
+      </a>
+    )}
+  </div>
+</div>
+
+<style>
+  .learning-path-banner {
+    background-color: var(--color-primary-light);
+    border: 1px solid var(--color-primary-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-6);
+    margin-bottom: var(--space-6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .banner-main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .path-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-primary);
+    background-color: var(--color-bg-surface);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-primary-border);
+  }
+
+  .path-title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
+
+  .path-title a {
+    color: var(--color-text-main);
+    text-decoration: none;
+  }
+
+  .path-title a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .path-step {
+    color: var(--color-primary);
+    margin-left: var(--space-2);
+  }
+
+  .banner-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .nav-btn {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .next-btn {
+    background-color: var(--color-primary);
+    color: #ffffff;
+  }
+
+  .next-btn:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+  }
+
+  .prev-btn {
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-main);
+    border: 1px solid var(--color-border);
+  }
+
+  .prev-btn:hover {
+    background-color: var(--color-bg-subtle);
+    text-decoration: none;
+  }
+</style>

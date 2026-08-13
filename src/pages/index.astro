@@ -1,0 +1,487 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getEntryUrl } from '../utils/relationships';
+
+const allEntries = await getCollection('knowledge', (e) => !e.data.draft);
+
+// Master Sequential Tracks definition
+const tracks = [
+  {
+    id: 'ecommerce-fundamentals',
+    number: '01',
+    title: 'Product & Catalog Architecture',
+    subtitle: 'Learn how products, variants, SKUs, barcodes, catalogs, and inventory fit together.',
+    badge: 'Track 1',
+    badgeClass: 'badge-ecommerce'
+  },
+  {
+    id: 'participants-pricing',
+    number: '02',
+    title: 'Commerce Participants, Pricing & Discounts',
+    subtitle: 'Master the relationships between merchants, vendors, customers, prices, discounts, and coupons.',
+    badge: 'Track 2',
+    badgeClass: 'badge-ecommerce'
+  },
+  {
+    id: 'orders-fulfillment',
+    number: '03',
+    title: 'Orders, Payments & Fulfillment',
+    subtitle: 'Understand checkout orders, payment gateway authorizations, multi-location inventory, and shipping.',
+    badge: 'Track 3',
+    badgeClass: 'badge-shopify'
+  },
+  {
+    id: 'cro-fundamentals',
+    number: '04',
+    title: 'Metrics, CRO & Experimentation',
+    subtitle: 'Learn conversion rate formulas, hypotheses, A/B testing logic, and optimization frameworks.',
+    badge: 'Track 4',
+    badgeClass: 'badge-cro'
+  }
+];
+
+// Helper to get sorted entries for a track
+function getTrackEntries(trackId: string) {
+  return allEntries
+    .filter((e) => e.data.learningPath?.id === trackId)
+    .sort((a, b) => (a.data.learningPath?.order || 0) - (b.data.learningPath?.order || 0));
+}
+---
+
+<BaseLayout title="Sequential Ecommerce & CRO Learning Roadmap for Developers">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <div class="hero-badge">
+        <span class="badge badge-ecommerce">Sequential Developer Roadmap</span>
+      </div>
+      <h1 class="hero-title">Learn Ecommerce & CRO <br/><span class="text-accent">In Step-by-Step Order</span></h1>
+      <p class="hero-subtitle">
+        No random articles or disconnected jargon. Follow structured, chronological learning tracks that take you from core domain logic to advanced Shopify & CRO engineering.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/paths/ecommerce-fundamentals/" class="btn btn-primary">Start Step 1: Catalog Architecture &rarr;</a>
+        <a href="#sequential-tracks" class="btn btn-secondary">Explore 4 Master Tracks</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Big Picture Domain Map Section -->
+  <section class="big-picture-section container">
+    <div class="big-picture-card">
+      <div class="section-header-center">
+        <span class="badge badge-cro">The Big Picture</span>
+        <h2>Master Architecture Flow</h2>
+        <p>How ecommerce domain concepts connect sequentially from catalog entry to optimization:</p>
+      </div>
+
+      <div class="big-picture-flow">
+        <div class="flow-step">
+          <span class="step-badge">1. Catalog</span>
+          <h3>Product & Variant</h3>
+          <p>Merchandising structure & SKUs</p>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+
+        <div class="flow-step">
+          <span class="step-badge">2. Inventory</span>
+          <h3>Stock & Location</h3>
+          <p>Multi-warehouse inventory</p>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+
+        <div class="flow-step">
+          <span class="step-badge">3. Checkout</span>
+          <h3>Order & Payment</h3>
+          <p>Transactions & fulfillment</p>
+        </div>
+        <div class="flow-arrow">&rarr;</div>
+
+        <div class="flow-step">
+          <span class="step-badge">4. Growth</span>
+          <h3>Metrics & CRO</h3>
+          <p>Hypotheses & A/B testing</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Master Sequential Tracks -->
+  <section id="sequential-tracks" class="tracks-section container">
+    <div class="section-header-center">
+      <h2>Master Chronological Tracks</h2>
+      <p class="section-subheading">Choose a track and follow the sequential steps in exact order:</p>
+    </div>
+
+    <div class="tracks-stack">
+      {tracks.map((track) => {
+        const trackEntries = getTrackEntries(track.id);
+        const firstEntryUrl = trackEntries.length > 0 ? getEntryUrl(trackEntries[0]) : `/paths/${track.id}/`;
+
+        return (
+          <div class="track-card">
+            <div class="track-header">
+              <div class="track-meta">
+                <span class="track-num font-mono">{track.number}</span>
+                <span class={`badge ${track.badgeClass}`}>{track.badge}</span>
+                <span class="track-count">{trackEntries.length} Steps in Sequence</span>
+              </div>
+              <h3 class="track-title">{track.title}</h3>
+              <p class="track-subtitle">{track.subtitle}</p>
+              
+              <a href={firstEntryUrl} class="track-start-btn">Start Track (Step 1) &rarr;</a>
+            </div>
+
+            <div class="track-timeline">
+              <span class="timeline-heading">Step-by-Step Sequence:</span>
+              <ol class="timeline-list">
+                {trackEntries.map((entry, idx) => (
+                  <li class="timeline-item">
+                    <a href={getEntryUrl(entry)} class="timeline-link">
+                      <span class="item-step font-mono">{idx + 1}</span>
+                      <span class="item-title">{entry.data.title}</span>
+                      <span class="item-type">{entry.data.type}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-section {
+    padding: var(--space-16) 0 var(--space-12) 0;
+    text-align: center;
+    background: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-base) 100%);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .hero-content {
+    max-width: 840px;
+  }
+
+  .hero-badge {
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-title {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    margin-bottom: var(--space-4);
+    line-height: 1.15;
+  }
+
+  .text-accent {
+    color: var(--color-primary);
+  }
+
+  .hero-subtitle {
+    font-size: var(--fs-md);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-8);
+    line-height: var(--lh-relaxed);
+  }
+
+  .hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+  }
+
+  .btn-primary {
+    background-color: var(--color-primary);
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background-color: #1d4ed8;
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-main);
+    border: 1px solid var(--color-border);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-bg-subtle);
+    text-decoration: none;
+  }
+
+  .big-picture-section {
+    margin-top: var(--space-12);
+  }
+
+  .big-picture-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .section-header-center {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .section-header-center h2 {
+    font-size: var(--fs-2xl);
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .section-header-center p {
+    color: var(--color-text-subtle);
+    margin-bottom: 0;
+  }
+
+  .big-picture-flow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .flow-step {
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    flex: 1;
+    min-width: 180px;
+    text-align: center;
+  }
+
+  .step-badge {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .flow-step h3 {
+    font-size: var(--fs-md);
+    margin-top: var(--space-1);
+    margin-bottom: var(--space-1);
+  }
+
+  .flow-step p {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+    margin: 0;
+  }
+
+  .flow-arrow {
+    font-size: var(--fs-xl);
+    color: var(--color-border-strong);
+    font-weight: 700;
+  }
+
+  .tracks-section {
+    margin-top: var(--space-16);
+    margin-bottom: var(--space-16);
+  }
+
+  .tracks-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin-top: var(--space-8);
+  }
+
+  .track-card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(340px, 1.2fr);
+    gap: var(--space-8);
+    align-items: start;
+    transition: border-color var(--transition-fast);
+  }
+
+  .track-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .track-card:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  .track-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .track-num {
+    font-size: var(--fs-2xl);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1;
+  }
+
+  .track-count {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .track-title {
+    font-size: var(--fs-xl);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .track-subtitle {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-6);
+    line-height: var(--lh-relaxed);
+  }
+
+  .track-start-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-border);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+  }
+
+  .track-start-btn:hover {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .track-timeline {
+    border-left: 1px solid var(--color-border);
+    padding-left: var(--space-6);
+  }
+
+  .timeline-heading {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .timeline-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .timeline-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--color-text-main);
+    font-size: var(--fs-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .timeline-link:hover {
+    background-color: var(--color-bg-subtle);
+    border-color: var(--color-border);
+    color: var(--color-primary);
+  }
+
+  .item-step {
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .item-title {
+    flex: 1;
+    font-weight: 500;
+    color: var(--color-text-main);
+  }
+
+  .item-type {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border);
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  @media (max-width: 900px) {
+    .track-card {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .track-timeline {
+      border-left: none;
+      border-top: 1px solid var(--color-border);
+      padding-left: 0;
+      padding-top: var(--space-4);
+    }
+    .big-picture-flow {
+      flex-direction: column;
+    }
+    .flow-arrow {
+      transform: rotate(90deg);
+    }
+  }
+</style>

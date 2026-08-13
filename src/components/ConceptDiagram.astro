@@ -1,0 +1,169 @@
+---
+export interface DiagramNode {
+  label: string;
+  url?: string;
+  description?: string;
+  isCurrent?: boolean;
+}
+
+interface Props {
+  title?: string;
+  nodes: DiagramNode[];
+}
+
+const { title = "Parent-Child Domain Hierarchy", nodes = [] } = Astro.props;
+---
+
+{nodes.length > 0 && (
+  <figure class="concept-diagram-container" aria-label={title}>
+    <figcaption class="diagram-title">
+      <span class="diagram-icon">📌</span>
+      <span>{title}</span>
+    </figcaption>
+
+    <div class="diagram-flow">
+      {nodes.map((node, index) => {
+        const isLast = index === nodes.length - 1;
+        return (
+          <div class="diagram-node-wrapper">
+            <div class={`diagram-node ${node.isCurrent ? 'node-active' : ''}`}>
+              <span class="node-label">
+                {node.url && !node.isCurrent ? (
+                  <a href={node.url} class="node-link">{node.label}</a>
+                ) : (
+                  node.label
+                )}
+                {node.isCurrent && <span class="active-pill">This Page</span>}
+              </span>
+              {node.description && <span class="node-desc">{node.description}</span>}
+            </div>
+
+            {!isLast && (
+              <div class="diagram-arrow" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  </figure>
+)}
+
+<style>
+  .concept-diagram-container {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-8);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .diagram-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  .diagram-flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .diagram-node-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .diagram-node {
+    background-color: var(--color-bg-subtle);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    transition: all var(--transition-fast);
+  }
+
+  .node-active {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  .node-label {
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    color: var(--color-text-main);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .node-link {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .node-link:hover {
+    text-decoration: underline;
+  }
+
+  .active-pill {
+    font-size: 0.65rem;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    padding: 0.05rem 0.35rem;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .node-desc {
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .diagram-arrow {
+    color: var(--color-border-strong);
+    display: flex;
+    align-items: center;
+  }
+
+  @media (max-width: 640px) {
+    .diagram-flow {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .diagram-node-wrapper {
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .diagram-node {
+      width: 100%;
+      text-align: center;
+    }
+
+    .diagram-arrow svg {
+      transform: rotate(90deg);
+    }
+  }
+</style>

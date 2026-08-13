@@ -1,0 +1,221 @@
+---
+import { getEntryUrl } from '../utils/relationships';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  relatedEntries?: CollectionEntry<'knowledge'>[];
+  confusedWithEntries?: CollectionEntry<'knowledge'>[];
+  shopifyEntry?: CollectionEntry<'knowledge'> | null;
+  comparisonEntries?: CollectionEntry<'knowledge'>[];
+}
+
+const { relatedEntries = [], confusedWithEntries = [], shopifyEntry = null, comparisonEntries = [] } = Astro.props;
+
+const hasContent = relatedEntries.length > 0 || confusedWithEntries.length > 0 || shopifyEntry !== null || comparisonEntries.length > 0;
+---
+
+{hasContent && (
+  <section class="related-concepts-wrapper">
+    <div class="related-header">
+      <span class="badge badge-ecommerce">Knowledge Connections</span>
+      <h2 class="related-title">Explore Connected Architecture</h2>
+      <p class="related-subtitle">Continue learning with relevant platform implementations, comparison guides, and related concepts.</p>
+    </div>
+
+    <div class="related-groups-stack">
+      {comparisonEntries.length > 0 && (
+        <div class="concept-group">
+          <div class="group-header">
+            <span class="badge badge-warning">Comparison Guides</span>
+            <h3 class="group-title">Compare & Contrast</h3>
+          </div>
+          <div class="cards-grid">
+            {comparisonEntries.map((item) => (
+              <a href={getEntryUrl(item)} class="concept-card card-comparison">
+                <div class="card-top">
+                  <h4 class="card-title">{item.data.title}</h4>
+                  <span class="card-arrow">&rarr;</span>
+                </div>
+                <p class="card-summary">{item.data.summary}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {shopifyEntry && (
+        <div class="concept-group">
+          <div class="group-header">
+            <span class="badge badge-shopify">Shopify Architecture</span>
+            <h3 class="group-title">Platform Implementation</h3>
+          </div>
+          <div class="cards-grid">
+            <a href={getEntryUrl(shopifyEntry)} class="concept-card card-shopify">
+              <div class="card-top">
+                <h4 class="card-title">{shopifyEntry.data.title}</h4>
+                <span class="card-arrow">&rarr;</span>
+              </div>
+              <p class="card-summary">{shopifyEntry.data.summary}</p>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {confusedWithEntries.length > 0 && (
+        <div class="concept-group">
+          <div class="group-header">
+            <span class="badge badge-cro">Common Confusion</span>
+            <h3 class="group-title">Frequently Confused With</h3>
+          </div>
+          <div class="cards-grid">
+            {confusedWithEntries.map((item) => (
+              <a href={getEntryUrl(item)} class="concept-card card-confused">
+                <div class="card-top">
+                  <h4 class="card-title">{item.data.title}</h4>
+                  <span class="card-arrow">&rarr;</span>
+                </div>
+                <p class="card-summary">{item.data.summary}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {relatedEntries.length > 0 && (
+        <div class="concept-group">
+          <div class="group-header">
+            <span class="badge badge-ecommerce">Related Domain Topics</span>
+            <h3 class="group-title">Connected Concepts</h3>
+          </div>
+          <div class="cards-grid">
+            {relatedEntries.map((item) => (
+              <a href={getEntryUrl(item)} class="concept-card card-related">
+                <div class="card-top">
+                  <h4 class="card-title">{item.data.title}</h4>
+                  <span class="card-arrow">&rarr;</span>
+                </div>
+                <p class="card-summary">{item.data.summary}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  .related-concepts-wrapper {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .related-header {
+    margin-bottom: 2rem;
+  }
+
+  .related-title {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-text-main);
+  }
+
+  .related-subtitle {
+    font-size: var(--fs-base);
+    color: var(--color-text-subtle);
+    margin-bottom: 0;
+  }
+
+  .related-groups-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .concept-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .group-title {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-text-main);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .concept-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .concept-card:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .concept-card:hover .card-title {
+    color: var(--color-primary);
+  }
+
+  .card-arrow {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text-subtle);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+
+  .concept-card:hover .card-arrow {
+    color: var(--color-primary);
+    transform: translateX(4px);
+  }
+
+  .card-summary {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+const breadcrumbItems = [{ label: 'Home', href: '/' }, ...items];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbItems.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.label,
+    ...(item.href ? { "item": new URL(item.href, Astro.site || 'https://ecom-cro.dev').href } : {})
+  }))
+};
+---
+
+<nav aria-label="Breadcrumbs" class="breadcrumbs-container">
+  <ol class="breadcrumbs-list">
+    {breadcrumbItems.map((item, index) => {
+      const isLast = index === breadcrumbItems.length - 1;
+      return (
+        <li class="breadcrumb-item">
+          {item.href && !isLast ? (
+            <a href={item.href} class="breadcrumb-link">{item.label}</a>
+          ) : (
+            <span class="breadcrumb-current" aria-current={isLast ? 'page' : undefined}>
+              {item.label}
+            </span>
+          )}
+          {!isLast && <span class="breadcrumb-separator" aria-hidden="true">/</span>}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
+
+<style>
+  .breadcrumbs-container {
+    margin-bottom: var(--space-6);
+  }
+
+  .breadcrumbs-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+  }
+
+  .breadcrumb-link {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--color-primary);
+  }
+
+  .breadcrumb-current {
+    color: var(--color-text-main);
+    font-weight: 600;
+  }
+
+  .breadcrumb-separator {
+    margin-left: var(--space-2);
+    margin-right: var(--space-2);
+    color: var(--color-border-strong);
+  }
+</style>

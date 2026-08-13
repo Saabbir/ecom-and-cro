@@ -1,0 +1,143 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-content">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">⚡ Ecom & CRO for Developers</a>
+      <p class="footer-desc">
+        A fast, static educational knowledge base demystifying ecommerce domain logic, CRO frameworks, and Shopify technical concepts for developers.
+      </p>
+    </div>
+
+    <div class="footer-grid">
+      <div class="footer-col">
+        <span class="footer-heading">Ecommerce</span>
+        <ul>
+          <li><a href="/ecommerce/product/">Product</a></li>
+          <li><a href="/ecommerce/variant/">Variant</a></li>
+          <li><a href="/ecommerce/sku/">SKU</a></li>
+          <li><a href="/ecommerce/inventory/">Inventory</a></li>
+          <li><a href="/ecommerce/order/">Order</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <span class="footer-heading">Comparisons</span>
+        <ul>
+          <li><a href="/compare/product-vs-variant/">Product vs Variant</a></li>
+          <li><a href="/compare/sku-vs-barcode/">SKU vs Barcode</a></li>
+          <li><a href="/compare/catalog-vs-inventory/">Catalog vs Inventory</a></li>
+          <li><a href="/compare/order-vs-transaction/">Order vs Transaction</a></li>
+          <li><a href="/compare/revenue-vs-profit/">Revenue vs Profit</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <span class="footer-heading">Shopify & CRO</span>
+        <ul>
+          <li><a href="/shopify/product/">Shopify Product</a></li>
+          <li><a href="/shopify/variant/">Shopify Variant</a></li>
+          <li><a href="/metrics/conversion-rate/">Conversion Rate</a></li>
+          <li><a href="/cro/hypothesis/">CRO Hypothesis</a></li>
+          <li><a href="/cro/experiment/">A/B Testing</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; {currentYear} Ecom & CRO Knowledge Base. Static-first educational platform for developers.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-bg-surface);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-8);
+    margin-top: auto;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-12);
+    margin-bottom: var(--space-8);
+  }
+
+  .footer-logo {
+    font-weight: 700;
+    font-size: var(--fs-md);
+    color: var(--color-text-main);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-desc {
+    font-size: var(--fs-sm);
+    color: var(--color-text-subtle);
+    max-width: 380px;
+    line-height: var(--lh-relaxed);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .footer-heading {
+    display: block;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-main);
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-col li {
+    margin-bottom: var(--space-2);
+  }
+
+  .footer-col a {
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .footer-col a:hover {
+    color: var(--color-primary);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-6);
+    text-align: center;
+    font-size: var(--fs-xs);
+    color: var(--color-text-subtle);
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+    
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+</style>
