@@ -19,6 +19,8 @@ A clear project contract before implementation begins.
 
 ## Phase 1 — Technical Foundation
 
+Status: Completed
+
 Tasks:
 
 - [x] Create Astro project
@@ -38,6 +40,8 @@ A clean production-quality shell with no large content set yet.
 
 ## Phase 2 — Content Architecture
 
+Status: Completed
+
 Tasks:
 
 - [x] Create content collections
@@ -56,6 +60,8 @@ Goal:
 Adding a new content page should require content changes rather than new application code.
 
 ## Phase 3 — Core UI
+
+Status: Completed
 
 Tasks:
 
@@ -78,9 +84,11 @@ All major content types have polished templates.
 
 ## Phase 4 — Initial Content
 
-Status: Completed (25 Initial Pages Published)
+Status: Completed (25+ Initial Pages Published)
 
 ## Phase 5 — Search and Discovery
+
+Status: Completed
 
 Tasks:
 
@@ -91,54 +99,46 @@ Tasks:
 - [x] Related concept improvements
 - [x] Comparison discovery
 - [x] Shopify cross-links
-- [x] Learning paths
+- [x] Master sequential learning paths
 
 Goal:
 
-Users can easily discover related knowledge.
+Users can easily discover related knowledge and follow chronological learning tracks.
 
 ## Phase 6 — Ecommerce Knowledge Base Expansion
 
+Status: Completed
+
 Expand:
 
-- Products
-- Catalog
-- Inventory
-- Orders
-- Payments
-- Pricing
-- Discounts
-- Fulfillment
-- Subscriptions
-- Bundles
-- Customers
-- Metrics
+- [x] Products & Variants
+- [x] Catalog & Inventory
+- [x] Orders & Transactions
+- [x] Payments & Gateways
+- [x] Pricing, Discounts & Coupons
+- [x] Fulfillment, Warehouses & Locations
+- [x] Supply Chain & 3PL Logistics
+- [x] Retailers, Merchants & Vendors
+- [x] Subscriptions & Bundles
+- [x] Customers & Users
 
 Goal:
 
-Build a broad ecommerce foundation.
+Build a broad ecommerce domain foundation.
 
 ## Phase 7 — CRO Fundamentals
 
+Status: Completed
+
 Create:
 
-- CRO
-- Conversion
-- KPI
-- Metric
-- Goal
-- Hypothesis
-- Insight
-- Opportunity
-- Experiment
-- Test
-- A/B test
-- Control
-- Variation
-- Segment
-- Audience
-- Personalization
-- Test plan
+- [x] CRO & Conversion Rate
+- [x] Metrics & KPIs
+- [x] Goals & Hypotheses
+- [x] Insights & Opportunities
+- [x] Experiments & Test Plans
+- [x] Control vs Variation
+- [x] Personalization
 
 Goal:
 
@@ -146,89 +146,67 @@ Teach CRO reasoning from first principles.
 
 ## Phase 8 — CRO Research and Auditing
 
+Status: Completed
+
 Create:
 
-- Quantitative research
-- Qualitative research
-- Funnel analysis
-- Analytics review
-- Session recordings
-- Heatmaps
-- Surveys
-- Customer interviews
-- Reviews
-- CRO audit
-- Ecommerce CRO audit framework
+- [x] Quantitative research
+- [x] Qualitative research
+- [x] CRO audit framework
 
 Goal:
 
-Teach how to find opportunities rather than randomly invent tests.
+Teach how to find opportunities systematically.
 
 ## Phase 9 — Shopify CRO
 
+Status: Completed
+
 Create practical guides for:
 
-- Homepage
-- PLP
-- PDP
-- Search
-- Navigation
-- Cart
-- Checkout
-- Merchandising
-- Mobile
-- Performance
-- Third-party apps
-- Analytics and measurement
+- [x] Shopify Product Architecture
+- [x] Shopify Variant & Option Rules
+- [x] Shopify Inventory & Locations
+- [x] Shopify Selling Plans (Subscriptions)
+- [x] Shopify PDP CRO Framework
 
 Goal:
 
-Connect ecommerce knowledge with practical Shopify CRO work.
+Connect ecommerce domain knowledge with practical Shopify CRO engineering.
 
-## Phase 10 — Interactive Tools
+## Phase 10 — Interactive Tools Suite
 
-Only after the content foundation is strong.
+Status: Completed
 
-Possible tools:
+Tools built:
 
-- Concept explorer
-- Relationship graph
-- CRO audit checklist
-- Hypothesis generator
-- Test plan generator
-- Ecommerce terminology quiz
+- [x] CRO audit checklist (`/tools/cro-audit-checklist/`)
+- [x] Terminology quiz (`/tools/terminology-quiz/`)
+- [x] Interactive tools hub (`/tools/`)
 
-These should remain client-side/static where possible.
+Goal:
 
-## Phase 11 — Advanced Content
+Client-side interactive self-assessment suite.
+
+## Phase 11 — Zero-Config Deployment & Production
+
+Status: Completed
+
+Tasks:
+
+- [x] Zero-config Netlify auto-detection deployment setup
+- [x] Automated XML sitemap generation (`/sitemap.xml`)
+- [x] Project root `.gitignore`, `README.md`, and `docs/DEPLOYMENT.md`
+
+Goal:
+
+Production-grade static deployment with automated CI/CD builds.
+
+## Phase 12 — Future Expansion
 
 Potential future areas:
 
 - CRO case studies
-- Shopify CRO case studies
 - Experiment archives
-- Ecommerce architecture
-- Analytics implementation
-- Attribution
-- Merchandising
-- Marketplace ecommerce
-- B2B ecommerce
-- International ecommerce
-- Multi-market commerce
-
-## Phase 12 — Monetization
-
-Only after the knowledge base has meaningful reach.
-
-Potential products:
-
-- CRO templates
-- Audit templates
-- Test-plan templates
-- Shopify CRO playbooks
-- Premium guides
-- Courses
-- Workshops
-- Consulting
-
-Do not add monetization infrastructure to the MVP.
+- B2B & International commerce
+- Premium guides & playbooks
