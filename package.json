@@ -15,8 +15,5 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "typescript": "^5.7.2"
-  },
-  "optionalDependencies": {
-    "@esbuild/linux-x64": "^0.25.0"
   }
 }
